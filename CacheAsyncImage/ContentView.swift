@@ -13,7 +13,14 @@ struct ContentView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            let url = URL(string: "https://is4-ssl.mzstatic.com/image/thumb/Purple1/v4/33/30/c0/3330c035-96ba-22ab-826d-cf7220c2a2da/pr_source.png/392x696bb.png")
+            CachedAsyncImage(url: url) { phase in
+                if case let .success(image) = phase {
+                    image
+                } else {
+                    Text("fail to")
+                }
+            }
         }
         .padding()
     }

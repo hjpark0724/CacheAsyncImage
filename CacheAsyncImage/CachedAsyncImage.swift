@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 public enum CachedAsyncImagePhase {
     case empty
@@ -28,6 +29,7 @@ public enum CachedAsyncImagePhase {
 }
 
 public enum CachedAsyncImageError: Error {
+    case urlError
     case networkError(Error)
     case httpResponseError(Int)
     case imageCreatedFail
@@ -38,16 +40,14 @@ struct CachedAsyncImage<Content>: View where Content: View{
     private var scale: CGFloat
     private var transaction: Transaction
     private var content: (CachedAsyncImagePhase) -> Content
-    @State private var phase: CachedAsyncImagePhase
-    
+    @ObservedObject private var viewModel = CachedAsyncImageViewModel()
     init(url: URL?, scale: CGFloat = 1) where Content == Image {
         self.init(url: url) { phase in
             phase.image ?? Image(uiImage: .init())
         }
     }
     
-    
-    init<I, P>(url: URL,
+    init<I, P>(url: URL?,
                       scale: CGFloat = 1,
                       @ViewBuilder content: @escaping (Image) -> I,
                       @ViewBuilder placeholder: @escaping () -> P)
@@ -70,66 +70,23 @@ struct CachedAsyncImage<Content>: View where Content: View{
         self.scale = scale
         self.transaction = transaction
         self.content = content
-        self._phase = State(wrappedValue: .empty)
     }
     
     var body: some View {
         if #available(iOS 15.0, *) {
-            content(phase)
+            content(viewModel.phase)
                 .task {
-                    guard let url = self.url else { return }
-                    let request = URLRequest(url: url)
-                    do {
-                        let (data, response) = try await
-                        URLSession.shared.data(for: request)
-                        let httpResponse = response as! HTTPURLResponse
-                        if httpResponse.statusCode < 200 || httpResponse.statusCode > 300 {
-                            self.phase = .failure(CachedAsyncImageError.httpResponseError(httpResponse.statusCode))
-                            print("http response error: \(httpResponse.statusCode)")
-                        }
-                        guard let uiImage = UIImage(data: data) else {
-                            self.phase = .failure(CachedAsyncImageError.imageCreatedFail)
-                            print("image create fail")
-                            return
-                        }
-                        withAnimation(transaction.animation) {
-                                self.phase = .success(Image(uiImage: uiImage))
-                            }
-                    } catch {
-                        self.phase = .failure(error)
-                        print("url request failed: \(error)")
-                    }
+                    await viewModel.fetch(url: url)
                 }
-            
         } else {
-            content(phase)
+            content(viewModel.phase)
                 .onAppear {
-                    guard let url = self.url else { return }
-                    let reqeust = URLRequest(url: url)
-                    URLSession.shared.dataTask(with: reqeust){(data, response, error) in
-                        DispatchQueue.main.async {
-                            if let error = error { self.phase = .failure(error) }
-                            let httpResponse = response as! HTTPURLResponse
-                            if httpResponse.statusCode < 200 || httpResponse.statusCode > 300 {
-                                self.phase = .failure(CachedAsyncImageError.httpResponseError(httpResponse.statusCode))
-                                print("http response error: \(httpResponse.statusCode)")
-                                return
-                            }
-                            guard let uiImage = UIImage(data: data!) else {
-                                self.phase = .failure(CachedAsyncImageError.imageCreatedFail)
-                                print("image create fail")
-                                return
-                            }
-                            withAnimation(transaction.animation) {
-                                self.phase = .success(Image(uiImage: uiImage))
-                            }
-                            
-                        }
-                    }.resume()
+                    viewModel.fetchImage(url: url)
                 }
         }
     }
 }
+
 
 
 struct CachedAsyncImage_Previews: PreviewProvider {
@@ -137,6 +94,42 @@ struct CachedAsyncImage_Previews: PreviewProvider {
         let url = URL(string: "https://is4-ssl.mzstatic.com/image/thumb/Purple1/v4/33/30/c0/3330c035-96ba-22ab-826d-cf7220c2a2da/pr_source.png/392x696bb.png")
         CachedAsyncImage(url: url)
     }
+}
+
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+func fetchImage(url: URL) async throws -> UIImage {
+    let request = URLRequest(url: url)
+    do {
+        let (data, response) = try await
+        URLSession.shared.data(for: request)
+        let httpResponse = response as! HTTPURLResponse
+        if httpResponse.statusCode < 200 || httpResponse.statusCode > 300 {
+            throw  CachedAsyncImageError.httpResponseError(httpResponse.statusCode)
+        }
+        
+        guard let uiImage = UIImage(data: data) else {
+            throw  CachedAsyncImageError.imageCreatedFail
+        }
+        return uiImage
+    } catch {
+        throw error
+    }
+}
+
+func fetchImagePublisher(url: URL) -> AnyPublisher<UIImage, Error> {
+    return URLSession.shared
+        .dataTaskPublisher(for: url)
+        .tryMap() { element in
+            let httpResponse = element.response as! HTTPURLResponse
+            if httpResponse.statusCode < 200 || httpResponse.statusCode > 300 {
+                throw CachedAsyncImageError.httpResponseError(httpResponse.statusCode)
+            }
+            guard let uiImage = UIImage(data: element.data) else {
+                throw CachedAsyncImageError.imageCreatedFail
+            }
+            return uiImage
+        }
+        .eraseToAnyPublisher()
 }
 
 
