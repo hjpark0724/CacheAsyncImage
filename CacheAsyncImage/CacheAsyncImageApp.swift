@@ -1,9 +1,3 @@
-//
-//  CacheAsyncImageApp.swift
-//  CacheAsyncImage
-//
-//  Created by HYEONJUN PARK on 2023/06/09.
-//
 
 import SwiftUI
 

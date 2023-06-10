@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E4CA3942A340B3F00B0B289 /* LibraryViewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4CA3932A340B3F00B0B289 /* LibraryViewContent.swift */; };
+		2E4CA3982A3413F100B0B289 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4CA3972A3413F100B0B289 /* PhotoPicker.swift */; };
+		2E4CA39A2A3427FE00B0B289 /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4CA3992A3427FE00B0B289 /* ProfileImage.swift */; };
+		2E4CA3A02A3442DB00B0B289 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4CA39F2A3442DB00B0B289 /* ProfileViewModel.swift */; };
 		2E55BBC42A330A0200CAB345 /* CacheAsyncImageApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E55BBC32A330A0200CAB345 /* CacheAsyncImageApp.swift */; };
 		2E55BBC62A330A0200CAB345 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E55BBC52A330A0200CAB345 /* ContentView.swift */; };
 		2E55BBC82A330A0300CAB345 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E55BBC72A330A0300CAB345 /* Assets.xcassets */; };
@@ -16,6 +20,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2E4CA3932A340B3F00B0B289 /* LibraryViewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewContent.swift; sourceTree = "<group>"; };
+		2E4CA3972A3413F100B0B289 /* PhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
+		2E4CA3992A3427FE00B0B289 /* ProfileImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImage.swift; sourceTree = "<group>"; };
+		2E4CA39F2A3442DB00B0B289 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		2E55BBC02A330A0200CAB345 /* CacheAsyncImage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CacheAsyncImage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E55BBC32A330A0200CAB345 /* CacheAsyncImageApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheAsyncImageApp.swift; sourceTree = "<group>"; };
 		2E55BBC52A330A0200CAB345 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -36,6 +44,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E4CA3A12A34690400B0B289 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				2E4CA39F2A3442DB00B0B289 /* ProfileViewModel.swift */,
+				2E4CA3972A3413F100B0B289 /* PhotoPicker.swift */,
+				2E4CA3992A3427FE00B0B289 /* ProfileImage.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		2E4CA3A22A34692F00B0B289 /* CachedAsyncImage */ = {
+			isa = PBXGroup;
+			children = (
+				2E55BBD32A33251500CAB345 /* CachedAsyncImageViewModel.swift */,
+				2E55BBD12A330A2200CAB345 /* CachedAsyncImage.swift */,
+			);
+			path = CachedAsyncImage;
+			sourceTree = "<group>";
+		};
 		2E55BBB72A330A0200CAB345 = {
 			isa = PBXGroup;
 			children = (
@@ -55,12 +82,13 @@
 		2E55BBC22A330A0200CAB345 /* CacheAsyncImage */ = {
 			isa = PBXGroup;
 			children = (
+				2E4CA3A22A34692F00B0B289 /* CachedAsyncImage */,
+				2E4CA3A12A34690400B0B289 /* Profile */,
 				2E55BBC32A330A0200CAB345 /* CacheAsyncImageApp.swift */,
 				2E55BBC52A330A0200CAB345 /* ContentView.swift */,
-				2E55BBD12A330A2200CAB345 /* CachedAsyncImage.swift */,
+				2E4CA3932A340B3F00B0B289 /* LibraryViewContent.swift */,
 				2E55BBC72A330A0300CAB345 /* Assets.xcassets */,
 				2E55BBC92A330A0300CAB345 /* Preview Content */,
-				2E55BBD32A33251500CAB345 /* CachedAsyncImageViewModel.swift */,
 			);
 			path = CacheAsyncImage;
 			sourceTree = "<group>";
@@ -143,8 +171,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E4CA3982A3413F100B0B289 /* PhotoPicker.swift in Sources */,
 				2E55BBC62A330A0200CAB345 /* ContentView.swift in Sources */,
+				2E4CA3A02A3442DB00B0B289 /* ProfileViewModel.swift in Sources */,
 				2E55BBD42A33251500CAB345 /* CachedAsyncImageViewModel.swift in Sources */,
+				2E4CA39A2A3427FE00B0B289 /* ProfileImage.swift in Sources */,
+				2E4CA3942A340B3F00B0B289 /* LibraryViewContent.swift in Sources */,
 				2E55BBD22A330A2200CAB345 /* CachedAsyncImage.swift in Sources */,
 				2E55BBC42A330A0200CAB345 /* CacheAsyncImageApp.swift in Sources */,
 			);
